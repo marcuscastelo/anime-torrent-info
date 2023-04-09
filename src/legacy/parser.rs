@@ -9,7 +9,7 @@ pub struct Parser {
 
 pub trait Handler {
     fn name(&self) -> &str;
-    fn handle(&self, title: &mut str) -> ();
+    fn handle(&self, title: &mut String) -> ();
 }
 
 #[derive(TypedBuilder)]
@@ -49,18 +49,31 @@ pub struct RegexHandler<T, U> {
     pub options: HandlerOptions<T, U>,
 }
 
-impl<T, U> Handler for RegexHandler<T, U> {
+impl Handler for RegexHandler<&str, String> {
     fn name(&self) -> &str {
         self.name.as_str()
     }
 
-    fn handle(&self, title: &mut str) {
+    fn handle(&self, title: &mut String) {
         let title_match = self.regex.find(title);
 
         let title_match = match title_match {
             Some(title_match) => title_match,
             None => return,
         };
+
+        let raw_match = title_match.as_str();
+        let clean_match = title_match.as_str().to_owned();
+
+        let transformed = self.options.transformer.transform(clean_match.as_str());
+        
+        // if self.options.remove {
+        //     title.replace_range(title_match.start()..title_match.end(), "");
+        // } else if self.options.skip_from_title {
+        //     title.replace_range(title_match.start()..title_match.end(), transformed.as_str());
+        // } else {
+        //     title.replace_range(title_match.start()..title_match.end(), format!("{} {}", transformed, raw_match).as_str());
+        // }
     }
 }
 
