@@ -1,18 +1,4 @@
-use super::handler::Handler;
-use super::regex::RegexHandler;
-use lazy_static::lazy_static;
-use regex::Regex;
-
-lazy_static! {
-    pub static ref EPISODE_CODE_1: RegexHandler = RegexHandler {
-        regex: Regex::new(r"[\[(]([a-zA-Z0-9]{8})[\])](?:\.[a-zA-Z0-9]{1,5}$|$)").unwrap(),
-        remove_match: true
-    };
-    pub static ref EPISODE_CODE_2: RegexHandler = RegexHandler {
-        regex: Regex::new(r"\[(\[A-Z0-9]{8})]").unwrap(),
-        remove_match: false
-    };
-}
+use super::prelude::*;
 
 lazy_static! {
     //     parser.addHandler("resolution", /\b[(\[]?4k[)\]]?\b/i, value("4k"), { remove: true });
