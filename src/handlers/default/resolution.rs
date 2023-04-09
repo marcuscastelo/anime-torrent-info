@@ -188,7 +188,7 @@ mod resolution_tests {
         bocchi_uccuss: (
             "[UCCUSS] Bocchi The Rock! ぼっち・ざ・ろっく! 第2巻 (BD 1920x1080p AVC FLAC)",
             (
-                "[UCCUSS] Bocchi The Rock! ぼっち・ざ・ろっく! 第2巻 (BD  AVC FLAC)".to_owned(),
+                "[UCCUSS] Bocchi The Rock! ぼっち・ざ・ろっく! 第2巻 (BD p AVC FLAC)".to_owned(),
                 vec!["1080".to_string()]
             )
         ),
@@ -204,6 +204,20 @@ mod resolution_tests {
             (
                 "[Ohys-Raws] Tensei Shitara Slime Datta Ken (2019) - OAD3 (DVD  x264 AAC).mp4".to_owned(),
                 vec!["576".to_string()]
+            )
+        ),
+        bakuman: (
+            "mohbaboo-subs_Bakuman.S1.E11.720p-Arabic.mkv",
+            (
+                "mohbaboo-subs_Bakuman.S1.E11.-Arabic.mkv".to_owned(),
+                vec!["720".to_string()]
+            )
+        ),
+        bakuman_396: (
+            "[MDW] Bakuman III - 23 - SD [704x396][DivX6][ITA][5524E571].avi",
+            (
+                "[MDW] Bakuman III - 23 - SD [][DivX6][ITA][5524E571].avi".to_owned(),
+                vec!["396".to_string()]
             )
         ),
     }
