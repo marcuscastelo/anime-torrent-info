@@ -1,5 +1,5 @@
 use super::handler::Handler;
-use regex::Regex;
+use fancy_regex::Regex;
 
 pub struct RegexHandler {
     pub regex: Regex,
@@ -9,7 +9,7 @@ pub struct RegexHandler {
 impl Handler for RegexHandler {
     fn handle(&self, filename: &str) -> (String, Vec<String>) {
         // Returns tuple of (filename, match)
-        let caps = match self.regex.captures(filename) {
+        let caps = match self.regex.captures(filename).unwrap() {
             Some(caps) => caps,
             None => return (filename.to_string(), vec![]),
         };

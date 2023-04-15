@@ -42,17 +42,12 @@ pub static ref DATE_7: RegexHandler = RegexHandler {
     regex: Regex::new(r"\b([(\[]?20[012][0-9](?:0[1-9]|1[012])(?:0[1-9]|[12][0-9]|3[01])[)\]]?)\b").unwrap(),
     remove_match: true
 };
+
 }
 
 fn all_dates() -> Vec<&'static RegexHandler> {
     vec![
-        &DATE_1,
-        &DATE_2,
-        &DATE_3,
-        &DATE_4,
-        &DATE_5,
-        &DATE_6,
-        &DATE_7,
+        &DATE_1, &DATE_2, &DATE_3, &DATE_4, &DATE_5, &DATE_6, &DATE_7,
     ]
 }
 
@@ -69,11 +64,55 @@ fn handle_date(filename: &str) -> (String, Vec<String>) {
     (new_name, matches)
 }
 
+lazy_static! {
+//     parser.addHandler("year", /[(\[]?[ .]?((?:19\d|20[012])\d[ .]?-[ .]?(?:19\d|20[012])\d)[ .]?[)\]]?/, yearRange, { remove: true });
+pub static ref YEAR_1: RegexHandler = RegexHandler {
+    regex: Regex::new(r"[(\[]?[ .]?((?:19\d|20[012])\d[ .]?-[ .]?(?:19\d|20[012])\d)[ .]?[)\]]?").unwrap(),
+    remove_match: true
+};
+
+//     parser.addHandler("year", /[(\[][ .]?((?:19\d|20[012])\d[ .]?-[ .]?\d{2})[ .]?[)\]]/, yearRange, { remove: true });
+pub static ref YEAR_2: RegexHandler = RegexHandler {
+    regex: Regex::new(r"[(\[][ .]?((?:19\d|20[012])\d[ .]?-[ .]?\d{2})[ .]?[)\]]").unwrap(),
+    remove_match: true
+};
+
+//TODO: alternative regex for lookaround since it's not supported in rust
+//     parser.addHandler("year", /[(\[]?(?!^)(?<!\d|Cap[. ]?)((?:19\d|20[012])\d)(?!\d|kbps)[)\]]?/i, integer, { remove: true });
+pub static ref YEAR_3: RegexHandler = RegexHandler {
+    regex: Regex::new(r"NEVERGOINGTOMATCHANYTHINGSINCEREGEXISBIG").unwrap(),
+    // regex: Regex::new(r"(?i)[(\[]?(?!^)(?<!\d|Cap[. ]?)((?:19\d|20[012])\d)(?!\d|kbps)[)\]]?").unwrap(),
+    remove_match: true
+};
+
+//     parser.addHandler("year", /^[(\[]?((?:19\d|20[012])\d)(?!\d|kbps)[)\]]?/i, integer, { remove: true });
+pub static ref YEAR_4: RegexHandler = RegexHandler {
+    regex: Regex::new(r"(?i)^[(\[]?((?:19\d|20[012])\d)(?!\d|kbps)[)\]]?").unwrap(),
+    remove_match: true
+};
+
+}
+
+fn all_years() -> Vec<&'static RegexHandler> {
+    vec![&YEAR_1, &YEAR_2, &YEAR_3, &YEAR_4]
+}
+
+fn handle_year(filename: &str) -> (String, Vec<String>) {
+    let mut new_name = filename.to_string();
+    let mut matches = Vec::new();
+
+    for year in all_years() {
+        let (new_name_, match_) = year.handle(&new_name);
+        new_name = new_name_;
+        matches.extend(match_);
+    }
+
+    (new_name, matches)
+}
+
 #[cfg(test)]
 mod date_tests {
     use super::*;
-    use crate::handlers::handler::Handler;
-    use crate::handlers::regex::RegexHandler;
 
     #[test]
     fn test_date_1() {
@@ -89,7 +128,8 @@ mod date_tests {
 
     #[test]
     fn test_handle_date() {
-        let (new_name, match_) = handle_date("Tensei shitara Slime Datta Ken ep.25-26 2021-01-12 on air.mp4");
+        let (new_name, match_) =
+            handle_date("Tensei shitara Slime Datta Ken ep.25-26 2021-01-12 on air.mp4");
 
         assert_eq!(
             new_name,
@@ -97,4 +137,22 @@ mod date_tests {
         );
         assert_eq!(match_, vec!["2021-01-12", "-", "-"]);
     }
+}
+
+#[cfg(test)]
+mod year_tests {
+    use super::*;
+
+    //TODO: test
+    // #[test]
+    // fn test_year_1() {
+    //     let (new_name, match_) = handle_year("[X5-452] Hunter × Hunter (2011) - S1-S3 [Webrip][1080p][x265][Opus][Vostfr]");
+
+    //     assert_eq!(
+    //         new_name,
+    //         "[X5-452] Hunter × Hunter (2011) - S1-S3 [Webrip][1080p][x265][Opus][Vostfr]"
+    //     );
+    //     assert_eq!(match_, vec!["2011", "-", "-"]);
+    // }
+    
 }
