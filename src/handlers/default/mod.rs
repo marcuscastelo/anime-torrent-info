@@ -12,3 +12,4 @@ pub mod remastered;
 pub mod unrated;
 pub mod region;
 pub mod source;
+pub mod bit_depth;
